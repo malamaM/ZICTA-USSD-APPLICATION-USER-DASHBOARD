@@ -5,7 +5,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
-import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../sections/@dashboard/app';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,44 +13,36 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../sections/@dashboard/app';
 
 const columns = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toFixed(2),
-  },
+  { id: 'appId', label: 'App ID', minWidth: 100 },
+  { id: 'custName', label: 'Customer Name', minWidth: 170 },
+  { id: 'shortCode', label: 'Short Code', minWidth: 100 },
+  { id: 'expiryDate', label: 'Expiry Date', minWidth: 120 },
+  { id: 'licenseStatus', label: 'License Status', minWidth: 120 },
 ];
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
-}
+const createData = (appId, custName, shortCode, expiryDate, licenseStatus) => {
+  return { appId, custName, shortCode, expiryDate, licenseStatus };
+};
 
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-];
 export default function DashboardAppPage() {
   const theme = useTheme();
+  const [rows, setRows] = useState([]);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
   const [AwaitingActionCount, setAwaitingActionCount] = useState(0);
   const [expiring, setexpiring] = useState(0);
@@ -60,17 +51,7 @@ export default function DashboardAppPage() {
   const [expiredCount, setexpiredCount] = useState(0);
 
   
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
-  
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(+event.target.value);
-      setPage(0);
-    };
+
  
   
 
@@ -92,6 +73,38 @@ export default function DashboardAppPage() {
       clearInterval(intervalId); // Cleanup the interval on component unmount
     };
   }, []);
+
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/searchuserlicense');
+        const appData = response.data;
+
+        // Transform appData into rows array
+        const newRows = appData.map((data) =>
+          createData(
+            data.app_id,
+            data.cust_name,
+            data.short_code,
+            data.expiry_date,
+            data.license_status
+          )
+        );
+
+        setRows(newRows);
+      } catch (error) {
+        console.error('Error fetching applications:', error);
+      }
+    };
+    fetchApplications();
+    const intervalId = setInterval(fetchApplications, 10000); // Fetch every 10 seconds
+
+    return () => {
+      clearInterval(intervalId); // Cleanup the interval on component unmount
+    };
+  }, []);
+
   useEffect(() => {
     const fetchAwaitingActionCount = async () => {
       try {
@@ -222,43 +235,38 @@ export default function DashboardAppPage() {
           Your USSD Shortcode Licenses
         </Typography>
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
+          <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      {columns.map((column) => (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          style={{ minWidth: column.minWidth }}
+                        >
+                          {column.label}
                         </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row) => {
+                        return (
+                          <TableRow hover role="checkbox" tabIndex={-1} key={row.appId}>
+                            <TableCell>{row.appId}</TableCell>
+                            <TableCell>{row.custName}</TableCell>
+                            <TableCell>{row.shortCode}</TableCell>
+                            <TableCell>{row.expiryDate}</TableCell>
+                            <TableCell>{row.licenseStatus}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
