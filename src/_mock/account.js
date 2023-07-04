@@ -1,5 +1,11 @@
 import axios from "axios";
 
+const account = {
+  displayName: '', // Initialize displayName with an empty string
+  email: 'demo@minimals.cc',
+  photoURL: '/assets/images/avatars/avatar_14.jpg',
+};
+
 const fetchUserData = async () => {
   const token = localStorage.getItem('token');
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -10,12 +16,11 @@ const fetchUserData = async () => {
 
     console.log('User Data:', userData);
 
-    const name = 'Alice'; // Replace with the name you want to search for
+    const name = userData.user.name; // Set the value of `name` from the response
 
-    // Find the item in userData based on the name property
-    const foundData = userData.find((item) => item.name === name);
+    account.displayName = name; // Set the value of `displayName` to `name`
 
-    console.log(foundData);
+    console.log(account);
 
     // Handle the user data as needed
   } catch (error) {
@@ -25,11 +30,5 @@ const fetchUserData = async () => {
 };
 
 fetchUserData();
-
-const account = {
-  displayName: 'Malama Chiluwe',
-  email: 'demo@minimals.cc',
-  photoURL: '/assets/images/avatars/avatar_14.jpg',
-};
 
 export default account;

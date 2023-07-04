@@ -14,6 +14,7 @@ import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
 import navConfig from './config';
+import image from './image.png';
 
 // ----------------------------------------------------------------------
 
@@ -53,21 +54,32 @@ export default function Nav({ openNav, onCloseNav }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: 'inline-flex' }}>
+      <Box sx={{ px: 2.5, py: 1.5, display: 'inline-flex' }}>
         {/* Place your content here */}
       </Box>
 
-      <Box sx={{ mb: 5, mx: 2.5 }}>
+      <Box sx={{ mb: 0, mx: 2.5, px:3.5}}>
+    <Link underline="none">
+      <StyledAccount>
+        <img src={image} alt="Logo" style={{ width: '150px', height: 'auto', px:2.5 }}/>
+      </StyledAccount>
+    </Link>
+  </Box>
+      <Box sx={{ px: 6.5, py: 3, display: 'inline-flex' }}>
+        {/* Place your content here */}
+      </Box>
+
+      <Box sx={{ mb: 0, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
 
             <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'white' }}>
+              <Typography variant="subtitle2" sx={{ color: '#FFFFFF' }}>
                 {account.displayName}
               </Typography>
 
-              <Typography variant="body2" sx={{ color: 'white' }}>
+              <Typography variant="body2" sx={{ color: '#FFFFFF' }}>
                 {account.role}
               </Typography>
             </Box>
@@ -80,7 +92,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ flexGrow: 1 }} />
 
       <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-        <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
+        <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative', color:'#FFFFFF' }}>
           {/* Place your content here */}
         </Stack>
       </Box>

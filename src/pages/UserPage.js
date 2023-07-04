@@ -175,11 +175,11 @@ export default function UserPage() {
         <title>User | Management</title>
       </Helmet>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4" sx={{ mb: 2 }}>
-          Users
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} sx={{color:'black'}}>
+        <Typography variant="h4" sx={{ mb: 2, color:'black' }}>
+          Applications
         </Typography>
-        <Button variant="contained">Add user</Button>
+        <Button variant="contained" sx={{color:'black'}}>Add user</Button>
       </Stack>
 
       <Card>
@@ -231,9 +231,9 @@ export default function UserPage() {
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell>{organization_name}</TableCell>
-                          <TableCell>{sentenceCase(shortcode_applied)}</TableCell>
-                          <TableCell>{opened}</TableCell>
+                          <TableCell px={{color:'black'}}>{organization_name}</TableCell>
+                          <TableCell px={{color:'black'}}>{sentenceCase(shortcode_applied)}</TableCell>
+                          <TableCell px={{color:'black'}}>{opened}</TableCell>
                           <TableCell>
                             <Label
                               variant={status === 'verified' ? 'success' : 'warning'}
@@ -259,9 +259,9 @@ export default function UserPage() {
                                 horizontal: 'center',
                               }}
                             >
-                              <Stack direction="row" p={2} spacing={1}>
-                                <MenuItem>Edit</MenuItem>
-                                <MenuItem>Delete</MenuItem>
+                              <Stack direction="row" p={2} spacing={1} px={{color:'black'}}>
+                                <MenuItem px={{color:'black'}}>Edit</MenuItem>
+                                <MenuItem px={{color:'black'}}>Delete</MenuItem>
                               </Stack>
                             </Popover>
                           </TableCell>

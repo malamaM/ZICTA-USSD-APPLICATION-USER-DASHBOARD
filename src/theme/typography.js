@@ -35,6 +35,7 @@ const typography = {
   h1: {
     fontWeight: 800,
     lineHeight: 80 / 64,
+    color:'black',
     fontSize: pxToRem(40),
     ...responsiveFontSizes({ sm: 52, md: 58, lg: 64 }),
   },

@@ -5,8 +5,11 @@ export default function Table(theme) {
     MuiTableCell: {
       styleOverrides: {
         head: {
-          color: 'white',
-          backgroundColor: 'white',
+          color: '#000000',
+          backgroundColor: '#838c9c',
+          '&:hover': {
+            color: 'blue',
+          }
         },
       },
     },

@@ -9,11 +9,8 @@ const navConfig = [
   {
     title: 'dashboard',
     path: '/dashboard/app',
-    icon: icon('ic_analytics'),
-    customStyle: {
-      color: 'red',
-      fontWeight: 'bold',
-  },
+    icon: icon('ic_analytics'),      fontWeight: 'bold',
+  
   },
   {
     title: 'Appliccations',

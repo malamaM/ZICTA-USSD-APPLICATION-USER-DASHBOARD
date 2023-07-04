@@ -5,7 +5,7 @@ import 'tailwindcss/tailwind.css'; // Import the Tailwind CSS styles
 // ----------------------------------------------------------------------
 
 export function bgBlur(props) {
-  const color = props?.color || 'white';
+  const color = props?.color || 'Black';
   const blur = props?.blur || 6;
   const opacity = props?.opacity || 0.8;
   const imgUrl = props?.imgUrl;
