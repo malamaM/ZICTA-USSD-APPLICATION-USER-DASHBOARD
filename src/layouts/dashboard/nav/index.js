@@ -14,7 +14,8 @@ import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
 import navConfig from './config';
-import image from './image.png';
+import imagee from './hero.png';
+
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +62,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 0, mx: 2.5, px:3.5}}>
     <Link underline="none">
       <StyledAccount>
-        <img src={image} alt="Logo" style={{ width: '150px', height: 'auto', px:2.5 }}/>
+        <img src={imagee} alt="Logo" style={{ width: '150px', height: 'auto', px:2.5 }}/>
       </StyledAccount>
     </Link>
   </Box>

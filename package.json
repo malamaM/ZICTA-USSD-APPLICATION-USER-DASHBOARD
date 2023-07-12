@@ -1,5 +1,5 @@
 {
-  "name": "@minimal/material-kit-react",
+  "name": "ZICTA USSD Client Dashboard",
   "author": "minimals.cc",
   "licence": "MIT",
   "version": "1.7.0",
@@ -49,6 +49,7 @@
     "@mui/material": "^5.11.10",
     "@mui/x-data-grid": "^6.9.1",
     "@popperjs/core": "^2.11.8",
+    "@stripe/stripe-js": "^1.54.1",
     "apexcharts": "^3.37.0",
     "axios": "^1.4.0",
     "change-case": "^4.1.2",

@@ -9,23 +9,25 @@ const navConfig = [
   {
     title: 'dashboard',
     path: '/dashboard/app',
-    icon: icon('ic_analytics'),      fontWeight: 'bold',
-  
+    icon: icon('ic_analytics'),
+    customStyle: {
+      color: 'red',
+      fontWeight: 'bold',
   },
-  
-    {
-      title: 'Applications',
-      path: '/dashboard/user',
-      icon: icon('folder-solid'),
-    },
+  },
+  {
+    title: 'Applications',
+    path: '/dashboard/user',
+    icon: icon('folder-solid'),
+  },
   {
     title: 'New Application',
-    path: '/apply',
+    path: '/apply2',
     icon: icon('plus-solid'),
   },
   {
     title: 'Place Holder',
-    path: '/apply',
+    path: '/',
     icon: icon('ic_blog'),
   },
   {
