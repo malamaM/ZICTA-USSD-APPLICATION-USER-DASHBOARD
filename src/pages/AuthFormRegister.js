@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -6,99 +6,11 @@ import axios from 'axios';
 import Input from './Input';
 import Button from './Button';
 
-
-
-
-
-
 const AuthFormRegister = () => {
-
-  const Navigate = useNavigate();
-
-  const handleLoginClick = () => {
-    Navigate('/login');
-  };
-
+  const navigate = useNavigate();
   const [variant, setVariant] = useState('REGISTER');
   const [loading, setLoading] = useState(false);
-  // const [csrfToken, setCsrfToken] = useState('');
-
-  /* useEffect(() => {
-    const fetchCSRFToken = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/token');
-        const data = await response.json();
-        const csrfToken = data.csrfToken;
-        setCsrfToken(csrfToken);
-        console.log('CSRF Token:', csrfToken);
-
-        if (!localStorage.getItem('uploadedCSRFToken')) {
-          localStorage.setItem('uploadedCSRFToken', csrfToken);
-          uploadCSRFToken(csrfToken);
-        }
-      } catch (error) {
-        console.error('Failed to fetch CSRF Token:', error);
-      }
-    };
-
-    const uploadCSRFToken = async (token) => {
-      try {
-        await axios.post('http://127.0.0.1:8000/upload-csrf-token', { token });
-        console.log('CSRF Token uploaded successfully');
-      } catch (error) {
-        console.error('Failed to upload CSRF Token:', error);
-      }
-    };
-
-    fetchCSRFToken();
-  }, []); */
-  const onSubmit = async (data) => {
-    setLoading(true);
-
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/api/register', data);
-
-      if (response.status === 200) {
-        // Authentication successful
-        const { token } = response.data.authorisation; // Extract the JWT token from the response
-
-        toast.success('Register successful');
-        setTimeout(() => {
-          setLoading(false);
-
-          // Save the JWT token to local storage
-          localStorage.setItem('token', token);
-
-          // Redirect or perform any necessary actions
-        
-            Navigate('/dashboard'); // Replace '/dashboard' with the appropriate route for your dashboard page
-          
-        }, 3000);
-      } else {
-        // Authentication failed
-        toast.error('Invalid credentials');
-        setLoading(false);
-      }
-    } catch (error) {
-      // Error occurred during login
-      console.error('Login error:', error);
-      toast.error('An error occurred');
-      setLoading(false);
-    }
-  };
-
-
-  const toggleVariant = useCallback(() => {
-    setVariant((prevVariant) =>
-      prevVariant === 'LOGIN' ? 'REGISTER' : 'LOGIN'
-    );
-  }, []);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
       email: '',
@@ -106,25 +18,24 @@ const AuthFormRegister = () => {
     },
   });
 
-  /* const onSubmit = async (data) => {
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const onSubmit = async (data) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:8000/api/rlogin',
-        data,
-        {
-          headers: {
-            'CSRF-TOKEN': csrfToken,
-          },
-        }
-      );
+      const response = await axios.post('http://127.0.0.1:8000/api/register', data);
 
       if (response.status === 200) {
-        toast.success('Login successful');
+        const { token } = response.data.authorisation;
+
+        toast.success('Register successful');
         setTimeout(() => {
           setLoading(false);
-          window.location.href = 'http://localhost:5174/';
+          localStorage.setItem('token', token);
+          navigate('/dashboard');
         }, 3000);
       } else {
         toast.error('Invalid credentials');
@@ -135,7 +46,13 @@ const AuthFormRegister = () => {
       toast.error('An error occurred');
       setLoading(false);
     }
-  }; */
+  };
+
+  const toggleVariant = useCallback(() => {
+    setVariant((prevVariant) =>
+      prevVariant === 'LOGIN' ? 'REGISTER' : 'LOGIN'
+    );
+  }, []);
 
   return (
     <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -186,7 +103,37 @@ const AuthFormRegister = () => {
           )}
           <div>
             <Button disabled={loading} fullWidth type="submit">
-              {variant === 'LOGIN' ? 'Sign In' : 'Register'}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="mr-2 animate-spin">
+                    <svg
+                      className="w-5 h-5 text-white"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  </div>
+                  Loading...
+                </div>
+              ) : (
+                <>
+                  {variant === 'LOGIN' ? 'Sign In' : 'Register'}
+                </>
+              )}
             </Button>
           </div>
         </form>
@@ -198,14 +145,14 @@ const AuthFormRegister = () => {
               : 'Already have an account?'}
           </div>
           <div
-  role="button"
-  tabIndex={0}
-  onClick={handleLoginClick}
-  onKeyPress={(event) => {
-    if (event.key === 'Enter') {
-      handleLoginClick();
-    }
-  }}
+            role="button"
+            tabIndex={0}
+            onClick={handleLoginClick}
+            onKeyPress={(event) => {
+              if (event.key === 'Enter') {
+                handleLoginClick();
+              }
+            }}
             className="underlin cursor-pointer text-sky-500 hover:text-sky-600"
           >
             {variant === 'LOGIN' ? 'Create an account' : 'Sign in'}

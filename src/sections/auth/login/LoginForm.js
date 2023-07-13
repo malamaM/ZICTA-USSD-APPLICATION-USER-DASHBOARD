@@ -21,7 +21,7 @@ export default function LoginForm() {
     try {
       const response = await axios.get('http://127.0.0.1:8000/token');
       setCsrfToken(response.data.csrfToken);
-      console.log (csrfToken);
+      console.log(csrfToken);
     } catch (error) {
       console.error('Failed to fetch CSRF token', error);
     }
@@ -41,7 +41,10 @@ export default function LoginForm() {
     formData.append('_token', csrfToken);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/uploadapplication', formData);
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/uploadapplication',
+        formData
+      );
 
       console.log(response.data); // You can customize this based on your response from the backend
 
@@ -60,7 +63,7 @@ export default function LoginForm() {
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} style={{margintop:'100px', width:'50%'}}>
+    <form ref={formRef} onSubmit={handleSubmit} style={{ margintop: '100px', width: '50%' }}>
       <Stack spacing={3}>
         <TextField
           name="organization"
@@ -86,31 +89,39 @@ export default function LoginForm() {
           label="Customer Email address"
           placeholder="Customer Email address"
         />
-             <TextField
+        <TextField
           name="shortcode_applied"
           InputLabelProps={{ shrink: true }}
           label="Shortcode Applied"
           placeholder="Shortcode"
         />
-     
       </Stack>
 
       {error && <div>{error}</div>}
       <LoadingButton
-  fullWidth
-  size="large"
-  type="submit"
-  variant="contained"
-  loading={loading}
-  style={{ color: 'white' }}
-  
-
->
-  APPLY
-</LoadingButton>
-
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        loading={loading}
+        style={{ color: 'black', backgroundColor: '#f5f5f5', marginTop: '20px', display: 'flex', alignItems: 'center' }}
+        loadingPosition="start"
+        loadingIndicator={
+          <div style={{ marginRight: '8px' }}>
+            <svg className="w-5 h-5 text-black animate-spin" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          </div>
+        }
+        disabled={loading}
+      >
+        {loading ? 'Submitting Application...' : 'Submit Application'}
+      </LoadingButton>
     </form>
   );
 }
-
-
