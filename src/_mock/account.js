@@ -17,6 +17,7 @@ const fetchUserData = async () => {
     console.log('User Data:', userData);
 
     const name = userData.user.name; // Set the value of `name` from the response
+    const email = userData.user.email; // Set the value of `email` from the response
 
     account.displayName = name; // Set the value of `displayName` to `name`
 

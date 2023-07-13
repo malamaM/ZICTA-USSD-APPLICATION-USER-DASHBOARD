@@ -60,7 +60,7 @@ export default function LoginForm() {
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit}>
+    <form ref={formRef} onSubmit={handleSubmit} style={{margintop:'100px', width:'50%'}}>
       <Stack spacing={3}>
         <TextField
           name="organization"
@@ -92,31 +92,25 @@ export default function LoginForm() {
           label="Shortcode Applied"
           placeholder="Shortcode"
         />
-        <TextField
-          name="password"
-          InputLabelProps={{ shrink: true }}
-          label="Password"
-          placeholder="Password"
-        />
-        <TextField
-          name="confirm_password"
-          InputLabelProps={{ shrink: true }}
-          label="Confirm Password"
-          placeholder="Confirm Password"
-        />
+     
       </Stack>
 
       {error && <div>{error}</div>}
-
       <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={loading}
-      >
-        APPLY
-      </LoadingButton>
+  fullWidth
+  size="large"
+  type="submit"
+  variant="contained"
+  loading={loading}
+  style={{ color: 'white' }}
+  
+
+>
+  APPLY
+</LoadingButton>
+
     </form>
   );
 }
+
+

@@ -14,6 +14,9 @@ import Loginn from './pages/Loginn';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import ApplicationForm from './pages/ApplicationForm';
+import SignUp from './pages/SignUpPage';
+import Apply from './pages/Apply';
+import Successful from './pages/Successful';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -33,12 +36,17 @@ export default function Router() {
       path: 'login',
       element: <Loginn />,
     },
+    {path: 'successful', element: <Successful />},
     {
       path: 'home',
       element: <Home />,
     },
     {path: 'search', element: <Search />},
     { path: 'apply', element: <ApplicationForm /> },
+    { path: 'signup', element: <SignUp /> },
+    { path: 'apply2', element: <Apply /> },
+,
+
     {
       element: <SimpleLayout />,
       children: [

@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+
+import { color, motion } from 'framer-motion';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+
 
 const Home = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isAvailable, setIsAvailable] = useState(null);
 
+
+
+
   const handleLoginClick = () => {
     navigate('/login');
   };
+  const handleLoginClick2 = () => {
+    navigate('/signup');
+  };
 
   const onSubmit = (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
+    event.preventDefault();
     const formData = new FormData(event.target);
     const search = formData.get('search');
 
@@ -48,7 +57,13 @@ const Home = () => {
           onClick={handleLoginClick}
           className="text-sm font-semibold leading-6 text-white cursor-pointer focus:outline-none"
         >
-          Log in <span aria-hidden="true">&rarr;</span>
+          Log in  <span aria-hidden="true">&rarr;</span>
+        </button>
+        <button
+          onClick={handleLoginClick2}
+          className="text-sm font-semibold leading-6 text-white cursor-pointer focus:outline-none"
+        >
+          Register <span aria-hidden="true">&rarr;</span>
         </button>
       </div>
       <div className="w-5/6 flex-col flex items-center justify-center ">
@@ -123,11 +138,30 @@ const Home = () => {
           </motion.div>
         </div>
       </div>
-      <div className="mt-6">
-        {isLoading && <p>Loading...</p>}
-        {isAvailable === true && <p className="text-green-500">Available</p>}
-        {isAvailable === false && <p className="text-red-500">Not Available</p>}
+      <div className="mt-6 rounded-full bg-white p-4" style={{ marginTop: '400px', position:'absolute' }}>
+        {isLoading && (
+          <div className="flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-blue-500 animate-spin" />
+          </div>
+        )}
+        {isAvailable === true && (
+          <p className="text-green-500">Available</p>
+        )}
+        {isAvailable === false && (
+          <p className="text-red-500">Not Available</p>
+        )}
       </div>
+      
+      
+      
+      <div style={{ marginTop: '560px', width:'Auto', backGroundColor:'white', position:'absolute', marginLeft:'-300',}}>
+        {isAvailable === true && (
+          <Button variant="contained" onClick={() => navigate('/apply2')}>
+  Apply Now
+</Button>        )}
+    </div>
+
+      
     </main>
   );
 };

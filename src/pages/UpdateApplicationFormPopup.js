@@ -47,27 +47,39 @@ const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handl
     try {
       // Perform the delete operation here
  
-        const response = await axios.post('http://127.0.0.1:8000/api/delete-application', formData);
-        console.log('API 1 response:', response.data);    } catch (error) {
+      const response = await axios.post('http://127.0.0.1:8000/api/delete-application', formData);
+      console.log('API 1 response:', response.data);
+    } catch (error) {
       console.error('Error deleting:', error);
     }
     
   };
+  const fetchUserData = async () => {
+    const token = localStorage.getItem('token');
+    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-  const handleChangeStatus = async () => {
     try {
-      // Perform the change status operation based on the chosen endpoint
-      if (handleChangeStatusEndpoint === 'api1') {
-        const response = await axios.post('http://127.0.0.1:8000/api/change-status', formData);
-        console.log('API 1 response:', response.data);
-      } else if (handleChangeStatusEndpoint === 'api2') {
-        const response = await axios.post('http://127.0.0.1:8000/api/endpoint2', formData);
-        console.log('API 2 response:', response.data);
-      }
+      const response = await axios.get('http://127.0.0.1:8000/api/me');
+      const userData = response.data;
+      console.log('User Data:', userData);
+      // Handle the user data as needed
     } catch (error) {
-      console.error('Error changing status:', error);
+      console.error('User data fetch error:', error);
+      // Handle the error
     }
   };
+  const handleChangeStatus = () => {
+    const appId = formData.appId; // Get the value of appId
+  
+    // Construct the URL with the appId as a path parameter
+    const url = `http://127.0.0.1:8000/lstripe/${appId}`;
+  
+    // Open the URL in a new tab
+    window.open(url, '_blank');
+  };
+  
+  
+  
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
@@ -81,6 +93,7 @@ const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handl
             value={formData.appId}
             onChange={handleInputChange}
             fullWidth
+            disabled 
           />
           <TextField
             label="Customer Name"
@@ -88,6 +101,7 @@ const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handl
             value={formData.custName}
             onChange={handleInputChange}
             fullWidth
+            disabled
           />
           <TextField
             label="Organization"
@@ -95,12 +109,14 @@ const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handl
             value={formData.organizationName}
             onChange={handleInputChange}
             fullWidth
+            disabled
           /><TextField
             label="Short Code"
             name="shortCode"
             value={formData.shortCode}
             onChange={handleInputChange}
             fullWidth
+            disabled 
           />
           <TextField
             label="Status"
@@ -108,19 +124,16 @@ const UpdateApplicationFormPopup = ({ selectedRow, closePopup, buttonText, handl
             value={formData.status}
             onChange={handleInputChange}
             fullWidth
+            disabled 
           />
           {/* Add more form fields for other columns */}
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleDelete} variant="contained" color="error">
-              Delete
-            </Button>
+            <Button onClick={handleClose}>Close</Button>
+           
             <Button onClick={handleChangeStatus} variant="contained" color="warning">
               {buttonText}
             </Button>
-            <Button type="submit" variant="contained" color="primary">
-              Update
-            </Button>
+            
           </DialogActions>
         </form>
       </DialogContent>

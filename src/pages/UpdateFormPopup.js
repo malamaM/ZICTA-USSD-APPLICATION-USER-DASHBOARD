@@ -81,6 +81,7 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
             value={formData.appId}
             onChange={handleInputChange}
             fullWidth
+            disabled
           />
           <TextField
             label="Customer Name"
@@ -88,6 +89,7 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
             value={formData.custName}
             onChange={handleInputChange}
             fullWidth
+            disabled
           />
           <TextField
             label="Short Code"
@@ -95,6 +97,7 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
             value={formData.shortCode}
             onChange={handleInputChange}
             fullWidth
+            disabled
           />
           <TextField
             label="Expiry Date"
@@ -102,6 +105,7 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
             value={formData.expiryDate}
             onChange={handleInputChange}
             fullWidth
+            disabled
           />
           <TextField
             label="License Status"
@@ -109,19 +113,16 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
             value={formData.licenseStatus}
             onChange={handleInputChange}
             fullWidth
+            disabled
           />
           {/* Add more form fields for other columns */}
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleDelete} variant="contained" color="error">
-              Delete
-            </Button>
+            <Button onClick={handleClose}>Close</Button>
+            
             <Button onClick={handleChangeStatus} variant="contained" color="warning">
               {buttonText}
             </Button>
-            <Button type="submit" variant="contained" color="primary">
-              Update
-            </Button>
+           
           </DialogActions>
         </form>
       </DialogContent>

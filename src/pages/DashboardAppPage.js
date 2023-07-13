@@ -35,12 +35,32 @@ const columns = [
   { id: 'licenseStatus', label: 'License Status', minWidth: 120 },
   { id: 'actions', label: 'Actions', minWidth: 120 },
 ];
+ 
+
+
 
 const createData = (id, appId, custName, shortCode, expiryDate, licenseStatus, actions) => {
   return { id, appId, custName, shortCode, expiryDate, licenseStatus, actions };
 };
 
 export default function DashboardAppPage() {
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const token = localStorage.getItem('token');
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/me');
+        // User is authenticated, continue with the page load
+      } catch (error) {
+        console.error('User not authenticated:', error);
+        Navigate('/login');
+      }
+    };
+    checkAuthentication();
+  }, []);
+
+
   const theme = useTheme();
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
   const [AwaitingActionCount, setAwaitingActionCount] = useState(0);
@@ -328,7 +348,6 @@ export default function DashboardAppPage() {
     
 
 
-     <button onClick={() => window.open('http://127.0.0.1:8000/lstripe/1', '_blank')}>Checkout</button>
     </>
   );
 }

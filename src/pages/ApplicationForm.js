@@ -1,88 +1,114 @@
-import { Helmet } from 'react-helmet-async';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 // @mui
-import { styled } from '@mui/material/styles';
-import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
-// hooks
-import useResponsive from '../hooks/useResponsive';
-// components
-import Logo from '../components/logo';
-import Iconify from '../components/iconify';
-// sections
-import { LoginForm } from '../sections/auth/login';
+import { Stack, TextField } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
-// ----------------------------------------------------------------------
+export default function LoginForm() {
+  const navigate = useNavigate();
+  const formRef = useRef(null);
 
-const StyledRoot = styled('div')(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
-  },
-}));
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [csrfToken, setCsrfToken] = useState('');
 
-const StyledSection = styled('div')(({ theme }) => ({
-  width: '100%',
-  maxWidth: 480,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  boxShadow: theme.customShadows.card,
-  backgroundColor: theme.palette.background.default,
-}));
+  useEffect(() => {
+    fetchCsrfToken();
+  }, []);
 
-const StyledContent = styled('div')(({ theme }) => ({
-  maxWidth: 480,
-  margin: 'auto',
-  minHeight: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  padding: theme.spacing(12, 0),
-}));
+  const fetchCsrfToken = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/token');
+      setCsrfToken(response.data.csrfToken);
+      console.log (csrfToken);
+    } catch (error) {
+      console.error('Failed to fetch CSRF token', error);
+    }
+  };
 
-// ----------------------------------------------------------------------
+  const handleClick = () => {
+    navigate('/successful', { replace: true });
+  };
 
-export default function LoginPage() {
-  const mdUp = useResponsive('up', 'md');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    setError(null);
+
+    const formData = new FormData(formRef.current);
+    formData.append('_token', csrfToken);
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/uploadapplication', formData);
+
+      console.log(response.data); // You can customize this based on your response from the backend
+
+      handleClick(); // Redirect to the dashboard page or handle authentication success
+
+      setLoading(false);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setError('Invalid credentials');
+      } else {
+        setError('An error occurred. Please try again.');
+      }
+
+      setLoading(false);
+    }
+  };
 
   return (
-    <>
-      <Helmet>
-        <title> USSD APPLICATION FORM </title>
-      </Helmet>
-
-      <StyledRoot>
-        <Logo
-          sx={{
-            position: 'fixed',
-            top: { xs: 16, sm: 24, md: 40 },
-            left: { xs: 16, sm: 24, md: 40 },
-          }}
+    <form ref={formRef} onSubmit={handleSubmit} style={{margintop:'100px', width:'50%'}}>
+      <Stack spacing={3}>
+        <TextField
+          name="organization"
+          InputLabelProps={{ shrink: true }}
+          label="Organization Name"
+          placeholder="Organization Name"
         />
+        <TextField
+          name="customer_name"
+          InputLabelProps={{ shrink: true }}
+          label="Customer Name"
+          placeholder="Customer Name"
+        />
+        <TextField
+          name="purpose"
+          InputLabelProps={{ shrink: true }}
+          label="Purpose for USSD"
+          placeholder="Purpose for USSD"
+        />
+        <TextField
+          name="email"
+          InputLabelProps={{ shrink: true }}
+          label="Customer Email address"
+          placeholder="Customer Email address"
+        />
+             <TextField
+          name="shortcode_applied"
+          InputLabelProps={{ shrink: true }}
+          label="Shortcode Applied"
+          placeholder="Shortcode"
+        />
+     
+      </Stack>
 
-        {mdUp && (
-          <StyledSection>
-         
-            <img src="/assets/illustrations/illustration_login.png" alt="login" />
-          </StyledSection>
-        )}
+      {error && <div>{error}</div>}
+      <LoadingButton
+  fullWidth
+  size="large"
+  type="submit"
+  variant="contained"
+  loading={loading}
+  style={{ color: 'white' }}
+  
 
-        <Container maxWidth="sm">
-          <StyledContent>
-            <Typography variant="h4" gutterBottom>
-Apply for a USSD Short Code            </Typography>
+>
+  APPLY
+</LoadingButton>
 
-
-        
-
-            <Divider sx={{ my: 3 }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                OR
-              </Typography>
-            </Divider>
-
-            <LoginForm />
-          </StyledContent>
-        </Container>
-      </StyledRoot>
-    </>
+    </form>
   );
 }
