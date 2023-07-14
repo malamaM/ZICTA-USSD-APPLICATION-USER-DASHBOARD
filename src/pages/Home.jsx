@@ -8,6 +8,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAvailable, setIsAvailable] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -42,27 +43,34 @@ const Home = () => {
     const formData = new FormData(event.target);
     const search = formData.get('search');
 
-    setIsLoading(true);
-    console.log(search);
-    axios
-      .post(
-        'http://127.0.0.1:8000/search',
-        { query: search },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-      .then((response) => {
-        const isAvailable = response.data.available;
-        setIsLoading(false);
-        setIsAvailable(isAvailable);
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsLoading(false);
-      });
+    // Validate the search input
+    const isValid = /^[2-8]\d{2,3}$/.test(search);
+
+    if (isValid) {
+      setIsLoading(true);
+      axios
+        .post(
+          'http://127.0.0.1:8000/search',
+          { query: search },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        .then((response) => {
+          const isAvailable = response.data.available;
+          setIsLoading(false);
+          setIsAvailable(isAvailable);
+          setErrorMessage(null);
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsLoading(false);
+        });
+    } else {
+      setErrorMessage('Invalid input.');
+    }
   };
 
   return (
@@ -102,6 +110,9 @@ const Home = () => {
           <p className="text-center text-sm sm:text-xl md:text-2xl max-w-4xl text-white mb-5">
             Unlock the Power of USSD with Personalized Codes Apply, Activate, and Connect with Ease!
           </p>
+          <p style={{color:'white', marginTop:'10px'}}>
+          The Short Code must be between 3 and 4 digits long and must not start with 0,1 or 9.
+          </p>
         </div>
         <div className="pt-2 relative mx-auto w-full max-w-2xl text-gray-600">
           <form onSubmit={onSubmit}>
@@ -128,6 +139,7 @@ const Home = () => {
               </svg>
             </button>
           </form>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </div>
       </div>
       <div className="mt-6 rounded-full bg-white p-4" style={{ marginTop: '400px', position: 'absolute' }}>

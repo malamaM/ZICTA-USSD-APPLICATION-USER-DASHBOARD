@@ -1,19 +1,36 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  CircularProgress,
+  Grid,
+  Typography,
+} from '@mui/material';
 
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
-
-const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStatusEndpoint, dialogueTitle }) => {
+const UpdateApplicationFormPopup = ({
+  selectedRow,
+  closePopup,
+  buttonText,
+  handleChangeStatusEndpoint,
+  dialogueTitle,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
   const [formData, setFormData] = useState({
-    id : selectedRow.id,
+    id: selectedRow.id,
     appId: selectedRow.appId,
     custName: selectedRow.custName,
     shortCode: selectedRow.shortCode,
-    expiryDate: selectedRow.expiryDate,
+    expiry: selectedRow.expiryDate,
     licenseStatus: selectedRow.licenseStatus,
   });
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [renewLoading, setRenewLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -22,16 +39,16 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    setUpdateLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/licenses/update', formData);
+      const response = await axios.post('http://127.0.0.1:8000/api/applications/update', formData);
       console.log('Form submitted successfully', response.data);
-      // Optionally, you can show a success message or perform any other actions here
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Optionally, you can show an error message or perform any other error handling here
     }
 
+    setUpdateLoading(false);
     handleClose();
   };
 
@@ -44,85 +61,119 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
   };
 
   const handleDelete = async () => {
+    setDeleteLoading(true);
+
     try {
-      // Perform the delete operation here
- 
-        const response = await axios.post('http://127.0.0.1:8000/api/delete-application', formData);
-        console.log('API 1 response:', response.data);    } catch (error) {
+      const response = await axios.post('http://127.0.0.1:8000/api/delete-application', formData);
+      console.log('API response:', response.data);
+      handleClose();
+    } catch (error) {
       console.error('Error deleting:', error);
     }
-    
+
+    setDeleteLoading(false);
   };
 
   const handleChangeStatus = async () => {
+    setRenewLoading(true);
+
     try {
-      // Perform the change status operation based on the chosen endpoint
       if (handleChangeStatusEndpoint === 'api1') {
         const response = await axios.post('http://127.0.0.1:8000/api/change-status', formData);
         console.log('API 1 response:', response.data);
+        handleClose();
       } else if (handleChangeStatusEndpoint === 'api2') {
-        const response = await axios.post('http://127.0.0.1:8000/api/shortcode/setexpiry', formData);
+        const response = await axios.post('http://127.0.0.1:8000/api/endpoint2', formData);
         console.log('API 2 response:', response.data);
+        handleClose();
       }
     } catch (error) {
       console.error('Error changing status:', error);
     }
+
+    setRenewLoading(false);
   };
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
       <DialogTitle>{dialogueTitle}</DialogTitle>
-      <DialogContent>
-        {/* Render the form fields here */}
-        <form onSubmit={handleFormSubmit}>
-          <TextField
-            label="Application ID"
-            name="appId"
-            value={formData.appId}
-            onChange={handleInputChange}
-            fullWidth
-            disabled
-          />
-          <TextField
-            label="Customer Name"
-            name="custName"
-            value={formData.custName}
-            onChange={handleInputChange}
-            fullWidth
-            disabled
-          />
-          <TextField
-            label="Short Code"
-            name="shortCode"
-            value={formData.shortCode}
-            onChange={handleInputChange}
-            fullWidth
-            disabled
-          />
-          <TextField
-            label="Expiry Date"
-            name="expiryDate"
-            value={formData.expiryDate}
-            onChange={handleInputChange}
-            fullWidth
-            disabled
-          />
-          <TextField
-            label="License Status"
-            name="licenseStatus"
-            value={formData.licenseStatus}
-            onChange={handleInputChange}
-            fullWidth
-            disabled
-          />
-          {/* Add more form fields for other columns */}
-          <DialogActions>
-            <Button onClick={handleClose}>Close</Button>
-            
-            <Button onClick={handleChangeStatus} variant="contained" color="warning">
-              {buttonText}
+      <DialogContent style={{ backgroundColor: '#f5f5f5' }}>
+        <form
+          style={{ backgroundColor: '#f5f5f5', color: 'black' }}
+          onSubmit={handleFormSubmit}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1" component="div">
+                <strong>License ID:</strong>
+              </Typography>
+              <Typography variant="body1" component="div">
+                {formData.id}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1" component="div">
+                <strong>Application ID:</strong>
+              </Typography>
+              <Typography variant="body1" component="div">
+                {formData.appId}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1" component="div">
+                <strong>Customer Name:</strong>
+              </Typography>
+              <Typography variant="body1" component="div">
+                {formData.custName}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1" component="div">
+                <strong>Expiry Date:</strong>
+              </Typography>
+              <Typography variant="body1" component="div">
+                {formData.expiry}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1" component="div">
+                <strong>Short Code:</strong>
+              </Typography>
+              <Typography variant="body1" component="div">
+                {formData.shortCode}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1" component="div">
+                <strong>License Status:</strong>
+              </Typography>
+              <Typography variant="body1" component="div">
+                {formData.licenseStatus}
+              </Typography>
+            </Grid>
+          </Grid>
+          <DialogActions style={{ marginTop: '40px', backgroundColor: '#f5f5f5' }}>
+            <Button onClick={handleClose} style={{ backgroundColor: 'black', color: 'white' }}>
+              Cancel
             </Button>
-           
+
+            <Button
+              onClick={handleChangeStatus}
+              variant="contained"
+              style={{ backgroundColor: 'blue', color: 'white' }}
+              disabled={renewLoading}
+            >
+              {renewLoading ? <CircularProgress color="inherit" size={20} /> : buttonText}
+            </Button>
+
+            <Button
+              type="submit"
+              variant="contained"
+              style={{ backgroundColor: 'green', color: 'white' }}
+              disabled={updateLoading}
+            >
+              {updateLoading ? <CircularProgress color="inherit" size={20} /> : 'Pay for Renewal'}
+            </Button>
           </DialogActions>
         </form>
       </DialogContent>
@@ -130,7 +181,7 @@ const UpdateFormPopup = ({ selectedRow, closePopup, buttonText, handleChangeStat
   );
 };
 
-UpdateFormPopup.propTypes = {
+UpdateApplicationFormPopup.propTypes = {
   selectedRow: PropTypes.object.isRequired,
   closePopup: PropTypes.func.isRequired,
   buttonText: PropTypes.string.isRequired,
@@ -138,4 +189,4 @@ UpdateFormPopup.propTypes = {
   dialogueTitle: PropTypes.string.isRequired,
 };
 
-export default UpdateFormPopup;
+export default UpdateApplicationFormPopup;

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-
+import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, Tab, CircularProgress } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,11 +18,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import { AppWidgetSummary, AppWebsiteVisits, AppCurrentVisits } from '../sections/@dashboard/app';
 import UpdateFormPopup from './UpdateFormPopup';
-import PaymentFormPopup from './PaymentFormPopup'; 
-
-
-
-
 
 const columns = [
   { id: 'id', label: 'License ID', minWidth: 100 },
@@ -35,33 +28,13 @@ const columns = [
   { id: 'licenseStatus', label: 'License Status', minWidth: 120 },
   { id: 'actions', label: 'Actions', minWidth: 120 },
 ];
- 
-
-
-
 const createData = (id, appId, custName, shortCode, expiryDate, licenseStatus, actions) => {
   return { id, appId, custName, shortCode, expiryDate, licenseStatus, actions };
 };
 
 export default function DashboardAppPage() {
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      const token = localStorage.getItem('token');
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-  
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/api/me');
-        // User is authenticated, continue with the page load
-      } catch (error) {
-        console.error('User not authenticated:', error);
-        Navigate('/login');
-      }
-    };
-    checkAuthentication();
-  }, []);
-
-
   const theme = useTheme();
+  const [loading, setLoading] = useState(true);
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
   const [AwaitingActionCount, setAwaitingActionCount] = useState(0);
   const [expiring, setexpiring] = useState(0);
@@ -71,14 +44,15 @@ export default function DashboardAppPage() {
 
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const [action, setAction] = useState(null);
 
   const Navigate = useNavigate();
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  console.log(process.env);
 
   const handleRowClick = (row) => {
     setSelectedRowData(row);
@@ -101,7 +75,8 @@ export default function DashboardAppPage() {
   const handleClose = () => {
     setIsPopupOpen(false);
   };
-
+  const [open, setOpen] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
@@ -116,7 +91,28 @@ export default function DashboardAppPage() {
     setFilteredRows(filtered);
     setPage(0);
   };
-  
+
+  const handleClickkk = () => {
+    window.open('https://example.com', '_blank');
+  };
+
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const token = localStorage.getItem('token');
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/me');
+        // User is authenticated, continue with the page load
+      } catch (error) {
+        console.error('User not authenticated:', error);
+        Navigate('/login');
+      }
+    };
+
+    checkAuthentication();
+  }, []);
+
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -124,11 +120,19 @@ export default function DashboardAppPage() {
         const appData = response.data;
 
         const newRows = appData.map((data) =>
-          createData(data.id, data.app_id, data.cust_name, data.short_code, data.expiry_date, data.license_status, data.actions)
+          createData(
+            data.id,
+            data.app_id,
+            data.cust_name,
+            data.short_code,
+            data.expiry_date,
+            data.license_status,
+            data.actions
+          )
         );
 
         setRows(newRows);
-        setFilteredRows(newRows);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
         console.error('Error fetching applications:', error);
       }
@@ -206,7 +210,7 @@ export default function DashboardAppPage() {
         const { count } = response.data;
         setavailableshortcodes(count);
       } catch (error) {
-        console.error('Error fetching available shortcode count:', error);
+        console.error('Error fetching availableusdd count:', error);
       }
     };
 
@@ -259,12 +263,12 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title>ZICTA USSD Portal</title>
+        <title>ZICTA USSD ADMIN Dashboard</title>
       </Helmet>
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome to the ZICTA USSD Portal
+          Hi, Welcome to the ZICTA USSD Admin dashboard
         </Typography>
 
         <Grid container spacing={3}>
@@ -276,12 +280,16 @@ export default function DashboardAppPage() {
             <AppWidgetSummary title="Licenses" total={expiring} color="warning" icon={'ant-design:windows-filled'} />
           </Grid>
 
-          <Grid item xs={12} md={9}>
-          <Typography variant="h6" sx={{ mb: 5, color: 'black' }}>
+
+          
+          <Grid item xs={12} md={6} lg={13}>
+            <Typography variant="h6" sx={{ mb: 5, color: 'black' }}>
               USSD Shortcode Licenses
             </Typography>
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor: '#f5f5f5' }}>
               <TextField
+                inputProps={{ style: { color: 'black' } }}
+                InputLabelProps={{ style: { color: 'black' } }}
                 label="Search"
                 value={searchQuery}
                 onChange={handleSearch}
@@ -289,65 +297,83 @@ export default function DashboardAppPage() {
                 variant="outlined"
                 fullWidth
               />
-              <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    <TableRow>
-                      {columns.map((column) => (
-                        <TableCell
-                          key={column.id}
-                          align="left"
-                          style={{ minWidth: column.minWidth }}
-                        >
-                          {column.label}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-  {(searchQuery ? filteredRows : rows)
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    .map((row) => {
-      return (
-        <TableRow hover role="checkbox" tabIndex={-1} key={row.appId} onClick={() => handleRowClick(row)}>
-          <TableCell>{row.id}</TableCell>
-          <TableCell>{row.appId}</TableCell>
-          <TableCell>{row.custName}</TableCell>
-          <TableCell>{row.shortCode}</TableCell>
-          <TableCell>{row.expiryDate}</TableCell>
-          <TableCell>{row.licenseStatus}</TableCell>
-          <TableCell>
-            <DeleteIcon />
-            <EditIcon />
-            <CheckIcon />
-          </TableCell>
-        </TableRow>
-      );
-    })}
-</TableBody>
-
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={(searchQuery ? filteredRows : rows).length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
+                  <CircularProgress />
+                </div>
+              ) : (
+                <>
+                  <TableContainer sx={{ maxHeight: 440, backgroundColor: '#f0f0f0' }}>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align="left"
+                              style={{ minWidth: column.minWidth, color: '#fff' }}
+                            >
+                              {column.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {(searchQuery ? filteredRows : rows)
+                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((row) => {
+                            return (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={row.appId}
+                                onClick={() => handleRowClick(row)}
+                              >
+                                <TableCell>{row.id}</TableCell>
+                                <TableCell>{row.appId}</TableCell>
+                                <TableCell>{row.custName}</TableCell>
+                                <TableCell>{row.shortCode}</TableCell>
+                                <TableCell>{row.expiryDate}</TableCell>
+                                <TableCell>{row.licenseStatus}</TableCell>
+                                <TableCell>
+                                  <DeleteIcon />
+                                  <EditIcon />
+                                  <CheckIcon />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={(searchQuery ? filteredRows : rows).length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </>
+              )}
             </Paper>
           </Grid>
         </Grid>
       </Container>
-      {isPopupOpen && <UpdateFormPopup selectedRow={selectedRowData} closePopup={handleClose} buttonText="Request Renewal" handleChangeStatusEndpoint="api2"     dialogueTitle="Update License Details"
- />}
-     
-
-    
-
-
+      {isPopupOpen && (
+        <UpdateFormPopup
+          selectedRow={selectedRowData}
+          closePopup={handleClose}
+          buttonText="Request Renewal"
+          handleChangeStatusEndpoint="api2"
+          dialogueTitle="Manage USSD License"
+          headerBackgroundColor="#f5f5f5"
+          headerTextColor="#f5f5f5"
+          style={{ color: 'white' }}
+        />
+      )}
     </>
   );
 }

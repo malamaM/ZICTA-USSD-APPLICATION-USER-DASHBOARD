@@ -12,6 +12,8 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [csrfToken, setCsrfToken] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
 
   useEffect(() => {
     fetchCsrfToken();
@@ -27,8 +29,12 @@ export default function LoginForm() {
     }
   };
 
-  const handleClick = () => {
-    navigate('/dashboard', { replace: true });
+ const handleClick = () => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/successful');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -70,30 +76,39 @@ export default function LoginForm() {
           InputLabelProps={{ shrink: true }}
           label="Organization Name"
           placeholder="Organization Name"
+          inputProps={{ style: { color: 'white' } }}
         />
         <TextField
           name="customer_name"
           InputLabelProps={{ shrink: true }}
           label="Customer Name"
           placeholder="Customer Name"
+          inputProps={{ style: { color: 'white' } }}
+
         />
         <TextField
           name="purpose"
           InputLabelProps={{ shrink: true }}
           label="Purpose for USSD"
           placeholder="Purpose for USSD"
+          inputProps={{ style: { color: 'white' } }}
+
         />
         <TextField
           name="email"
           InputLabelProps={{ shrink: true }}
           label="Customer Email address"
           placeholder="Customer Email address"
+          inputProps={{ style: { color: 'white' } }}
+
         />
         <TextField
           name="shortcode_applied"
           InputLabelProps={{ shrink: true }}
           label="Shortcode Applied"
           placeholder="Shortcode"
+          inputProps={{ style: { color: 'white' } }}
+
         />
       </Stack>
 
