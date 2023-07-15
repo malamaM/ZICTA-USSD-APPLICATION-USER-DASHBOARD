@@ -367,7 +367,7 @@ export default function DashboardAppPage() {
           selectedRow={selectedRowData}
           closePopup={handleClose}
           buttonText="Request Renewal"
-          handleChangeStatusEndpoint="api2"
+          handleChangeStatusEndpoint="api1"
           dialogueTitle="Manage USSD License"
           headerBackgroundColor="#f5f5f5"
           headerTextColor="#f5f5f5"

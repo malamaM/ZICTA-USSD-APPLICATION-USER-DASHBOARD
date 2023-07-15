@@ -79,7 +79,7 @@ const UpdateApplicationFormPopup = ({
 
     try {
       if (handleChangeStatusEndpoint === 'api1') {
-        const response = await axios.post('http://127.0.0.1:8000/api/change-status', formData);
+        const response = await axios.post('http://127.0.0.1:8000/api/licenserenewalrequest', formData);
         console.log('API 1 response:', response.data);
         handleClose();
       } else if (handleChangeStatusEndpoint === 'api2') {
@@ -94,13 +94,23 @@ const UpdateApplicationFormPopup = ({
     setRenewLoading(false);
   };
 
+  const handlepay = () => {
+    const id = formData.id; // Get the value of appId
+  
+    // Construct the URL with the appId as a path parameter
+    const url = `http://127.0.0.1:8000/lstripe/${id}`;
+  
+    // Open the URL in a new tab
+    window.open(url, '_blank');
+  };
+
   return (
     <Dialog open={isOpen} onClose={handleClose}>
       <DialogTitle>{dialogueTitle}</DialogTitle>
       <DialogContent style={{ backgroundColor: '#f5f5f5' }}>
         <form
           style={{ backgroundColor: '#f5f5f5', color: 'black' }}
-          onSubmit={handleFormSubmit}
+          onSubmit={handlepay}
         >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>

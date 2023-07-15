@@ -72,6 +72,11 @@ const Home = () => {
       setErrorMessage('Invalid input.');
     }
   };
+  const handleLoginKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleLoginClick();
+    }
+  };
 
   return (
     <main className="h-screen w-full bg-hero-pattern-blue bg-cover flex justify-center items-center relative">
@@ -87,14 +92,20 @@ const Home = () => {
           </Link>
         ) : (
           <>
-            <span
-              onClick={handleLoginClick}
-              className="text-sm font-semibold leading-6 text-white cursor-pointer focus:outline-none"
-            >
-              Log in {'->'}
-            </span>
+  <span
+  onClick={handleLoginClick}
+  onKeyDown={handleLoginKeyDown} // Add keydown event listener
+  role="button" // Add role attribute
+  tabIndex={0} // Make the element focusable
+  className="text-sm font-semibold leading-6 text-white cursor-pointer focus:outline-none"
+>
+  Log in {'->'}
+</span>
             <span
               onClick={handleLoginClick2}
+              onKeyDown={handleLoginKeyDown} // Add keydown event listener
+  role="button" // Add role attribute
+  tabIndex={0} // Make the e
               className="text-sm font-semibold leading-6 text-white cursor-pointer focus:outline-none"
             >
               Register {'->'}

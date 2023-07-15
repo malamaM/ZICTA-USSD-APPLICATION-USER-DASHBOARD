@@ -98,7 +98,7 @@ const UpdateApplicationFormPopup = ({
     const appId = formData.appId; // Get the value of appId
   
     // Construct the URL with the appId as a path parameter
-    const url = `http://127.0.0.1:8000/lstripe/${appId}`;
+    const url = `http://127.0.0.1:8000/astripe/${appId}`;
   
     // Open the URL in a new tab
     window.open(url, '_blank');
