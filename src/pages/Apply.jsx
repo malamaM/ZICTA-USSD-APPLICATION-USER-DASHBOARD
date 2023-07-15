@@ -28,9 +28,9 @@ const Apply = () => {
 
   const handleLoginClick = () => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/dashboard/app');
     } else {
-      navigate('/successful');
+      navigate('/login');
     }
   };
 
