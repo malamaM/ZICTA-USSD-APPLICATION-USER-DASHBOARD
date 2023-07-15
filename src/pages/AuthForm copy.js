@@ -26,7 +26,7 @@ const AuthForm = () => {
   /* useEffect(() => {
     const fetchCSRFToken = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/token');
+        const response = await fetch('https://vulkantechnologylabs.com:8000/token');
         const data = await response.json();
         const csrfToken = data.csrfToken;
         setCsrfToken(csrfToken);
@@ -43,7 +43,7 @@ const AuthForm = () => {
 
     const uploadCSRFToken = async (token) => {
       try {
-        await axios.post('http://127.0.0.1:8000/upload-csrf-token', { token });
+        await axios.post('https://vulkantechnologylabs.com:8000/upload-csrf-token', { token });
         console.log('CSRF Token uploaded successfully');
       } catch (error) {
         console.error('Failed to upload CSRF Token:', error);
@@ -56,7 +56,7 @@ const AuthForm = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login', data);
+      const response = await axios.post('https://vulkantechnologylabs.com:8000/api/login', data);
 
       if (response.status === 200) {
         // Authentication successful
@@ -111,7 +111,7 @@ const AuthForm = () => {
 
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/rlogin',
+        'https://vulkantechnologylabs.com:8000/api/rlogin',
         data,
         {
           headers: {
