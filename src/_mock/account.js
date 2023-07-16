@@ -11,7 +11,7 @@ const fetchUserData = async () => {
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/me');
+    const response = await axios.get('https://vulkantechnologylabs.com/api/me');
     const userData = response.data;
 
     console.log('User Data:', userData);

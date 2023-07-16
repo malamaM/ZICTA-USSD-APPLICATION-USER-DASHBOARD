@@ -19,7 +19,7 @@ export default function LoginForm() {
 
   const fetchCsrfToken = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/token');
+      const response = await axios.get('https://vulkantechnologylabs.com/token');
       setCsrfToken(response.data.csrfToken);
       console.log(csrfToken);
     } catch (error) {
@@ -42,7 +42,7 @@ export default function LoginForm() {
 
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/uploadapplication',
+        'https://vulkantechnologylabs.com/api/uploadapplication',
         formData
       );
 

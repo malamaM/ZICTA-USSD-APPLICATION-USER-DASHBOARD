@@ -104,7 +104,7 @@ export default function DashboardAppPage() {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/me');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/me');
         // User is authenticated, continue with the page load
       } catch (error) {
         console.error('User not authenticated:', error);
@@ -118,7 +118,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/applicationsbyid');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/applicationsbyid');
         const appData = response.data;
 
         const newRows = appData.map((data) =>
@@ -151,7 +151,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     const fetchPendingApplicationsCount = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/dashboard/pending-applications-count');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/dashboard/pending-applications-count');
         const { count } = response.data;
         setPendingApplicationsCount(count);
       } catch (error) {
@@ -170,7 +170,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     const fetchAwaitingActionCount = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/dashboard/awaiting-action-count');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/dashboard/awaiting-action-count');
         const { count } = response.data;
         setAwaitingActionCount(count);
       } catch (error) {
@@ -189,7 +189,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     const fetchexpiring = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/count-expiring-shortcodes');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/count-expiring-shortcodes');
         const { expiringCount } = response.data;
         setexpiring(expiringCount);
       } catch (error) {
@@ -208,7 +208,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     const fetchavailableshortcodes = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/shortcode/combinations');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/shortcode/combinations');
         const { count } = response.data;
         setavailableshortcodes(count);
       } catch (error) {
@@ -227,7 +227,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     const fetchActiveCount = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/count-expiring-shortcodes');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/count-expiring-shortcodes');
         const { futureCount } = response.data;
         setActiveCount(futureCount);
       } catch (error) {
@@ -246,7 +246,7 @@ export default function DashboardAppPage() {
   useEffect(() => {
     const fetchexpiredCount = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/count-expiring-shortcodes');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/count-expiring-shortcodes');
         const { expiredCount } = response.data;
         setexpiredCount(expiredCount);
       } catch (error) {

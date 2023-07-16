@@ -14,7 +14,7 @@ const Successful = () => {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/me');
+        const response = await axios.get('https://vulkantechnologylabs.com/api/me');
         // User is authenticated, continue with the page load
       } catch (error) {
         console.error('User not authenticated:', error);
@@ -38,7 +38,7 @@ const Successful = () => {
     console.log(search);
     axios
       .post(
-        'http://127.0.0.1:8000/search',
+        'https://vulkantechnologylabs.com/search',
         { query: search },
         {
           headers: {

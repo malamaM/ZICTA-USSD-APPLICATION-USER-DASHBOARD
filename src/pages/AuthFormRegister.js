@@ -26,7 +26,7 @@ const AuthFormRegister = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/register', data);
+      const response = await axios.post('https://vulkantechnologylabs.com/api/register', data);
 
       if (response.status === 200) {
         const { token } = response.data.authorisation;
