@@ -65,10 +65,10 @@ const AuthForm = () => {
   return (
     <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-        <h2 className="text-3xl md:text-4xl mb-1 md:mb-5 font-medium">
+        <h2 className="text-black-3xl md:text-4xl mb-1 md:mb-5 font-medium">
           {variant === 'LOGIN' ? 'Welcome Back' : 'Register your account'}
         </h2>
-        <p className="text-gray-400 text-sm mb-5 md:mb-10">
+        <p className="text-black-400 text-sm mb-5 md:mb-10" style={{ color: 'black' }}>
           {variant === 'LOGIN'
             ? 'Welcome back! Please enter your details to continue.'
             : 'Register your account to get started.'}
@@ -110,39 +110,38 @@ const AuthForm = () => {
             />
           )}
           <div>
-            <Button disabled={loading} fullWidth type="submit">
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="mr-2 animate-spin">
-                    <svg
-                      className="w-5 h-5 text-white"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                  </div>
-                  Signing you in...
+            <Button disabled={loading} fullWidth type="submit" />
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="mr-2 animate-spin">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
                 </div>
-              ) : (
-                <>
-                  {variant === 'LOGIN' ? 'Sign In' : 'Register'}
-                </>
-              )}
-            </Button>
+                Signing you in...
+              </div>
+            ) : (
+              <>
+                {variant === 'LOGIN' ? 'Sign In' : 'Register'}
+              </>
+            )}
           </div>
         </form>
         <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">

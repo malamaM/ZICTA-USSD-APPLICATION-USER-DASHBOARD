@@ -45,7 +45,7 @@ export default function Router() {
     { path: 'apply', element: <ApplicationForm /> },
     { path: 'signup', element: <SignUp /> },
     { path: 'apply2', element: <Apply /> },
-,
+
 
     {
       element: <SimpleLayout />,
